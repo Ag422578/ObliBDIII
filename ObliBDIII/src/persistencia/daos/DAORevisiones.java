@@ -1,5 +1,7 @@
 package persistencia.daos;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,12 +21,14 @@ public class DAORevisiones {
 	private String passw;
 	private String codigoFolio;
 
-	public DAORevisiones(String codF) {
+	public DAORevisiones(String codF) throws PersistenciaException {
 		this.codigoFolio = codF;
+		// levantar de properties los datos para conectar a la base
 	}
 
-	public void insBack(Revision rev) {
+	public void insBack(Revision rev) throws PersistenciaException {
 		try {
+			Connection con = DriverManager.getConnection(url, user, passw);
 			Consultas cons = new Consultas();
 			String query = cons.AgregarRevision();
 			PreparedStatement pstmt = con.prepareStatement(query);
@@ -38,15 +42,17 @@ public class DAORevisiones {
 		}
 	}
 
-	public int largo() {
+	public int largo() throws PersistenciaException {
 		Consultas cons = new Consultas();
 		int num = 0;
-		String query = cons.ExisteFolio();
+		String query = cons.cantidadRevisiones();
 		try {
-			Statement pstmt = con.createStatement();
-			ResultSet rs = pstmt.executeQuery(query);
+			Connection con = DriverManager.getConnection(url, user, passw);
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, codigoFolio);
+			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				num = rs.getInt("numero");
+				num = rs.getInt("cantidad");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -54,15 +60,35 @@ public class DAORevisiones {
 		return num;
 	}
 
-	public Revision kesimo(int numero) {
-		
+	public Revision kesimo(int numero) throws PersistenciaException {
+		try {
+			Connection con = DriverManager.getConnection(url, user, passw);
+			Consultas cons = new Consultas();
+			String query = cons.listarRevision();
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, codigoFolio);
+			pstmt.setInt(2, numero);
+			ResultSet rs = pstmt.executeQuery();
+			String descripcion = "";
+			if (rs.next()) {
+				descripcion = rs.getString("descripcion");
+			}
+			Revision rev = new Revision(numero, descripcion);
+			rs.close();
+			pstmt.close();
+			return rev;
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error de acceso a datos.");
+		}
 	}
 
-	public List<VORevision> listarRevisiones() {
+	public List<VORevision> listarRevisiones() throws PersistenciaException {
 		try {
+			Connection con = DriverManager.getConnection(url, user, passw);
 			Consultas cons = new Consultas();
 			String query = cons.ListarRevisiones();
 			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, codigoFolio);
 			ResultSet rs = pstmt.executeQuery(query);
 			LinkedList<VORevision> ListaRevisiones = new LinkedList<>();
 			while (rs.next()) {
@@ -77,8 +103,9 @@ public class DAORevisiones {
 		}
 	}
 
-	public void borrarRevisiones() {
+	public void borrarRevisiones() throws PersistenciaException {
 		try {
+			Connection con = DriverManager.getConnection(url, user, passw);
 			Consultas cons = new Consultas();
 			String query = cons.BorrarFolioRevisiones();
 			PreparedStatement pstmt = con.prepareStatement(query);

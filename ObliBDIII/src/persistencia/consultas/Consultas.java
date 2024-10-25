@@ -6,8 +6,16 @@ public class Consultas {
 		return "SELECT * FROM Folios WHERE codigo = ?";
 	}
 	
+	public String cantidadRevisiones() {
+		return "SELECT COUNT(*) AS cantidad FROM Revisiones WHERE codFolio = ?";
+	}
+	
 	public String existeRevision() {
 		return "SELECT numero from Revisiones WHERE codFolio = ? AND numero = ?";
+	}
+	
+	public String listarRevision() {
+		return "SELECT * from Revisiones WHERE codFolio = ? AND numero = ?";
 	}
 	
 	public String UltimaRevision() {
@@ -39,11 +47,12 @@ public class Consultas {
 	}
 
 	public String ListarRevisiones() {
-		return "SELECT * FROM Revisiones ORDER BY numero ASC";
+		return "SELECT * FROM Revisiones WHERE codFolio = ? ORDER BY numero ASC";
 	}
 
 	public String FolioMasRevisado() {
 		return "SELECT *,(SELECT COUNT(*) FROM Revisiones WHERE codFolio = codigo) AS Cantidad FROM Folios a WHERE codigo IN "
 				+ "(SELECT codFolio from Revisiones GROUP BY codFolio ORDER BY COUNT(codFolio) DESC LIMIT 1)";
 	}
+	
 }
