@@ -6,35 +6,25 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
 
-import persistencia.daos.DAOFolios;
-
-import Ejercicio3.LogicaPersistencia.Excepciones.PersistenciaException;
-import Ejercicio3.LogicaPersistencia.ValueObjects.*;
-import logica.valueObjects.VOFolio;
-import logica.valueObjects.VOFolioMaxRev;
+/*import Ejercicio3.LogicaPersistencia.Excepciones.PersistenciaException;
+import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
 
 public class Fachada {
-	
-	// acondicioné y arranqué con los de folio para adelantar que era solo invocar a los metodos del dao
-	// no creo que sean con catch, capaz throw, pero lo vemos mañana
-	
-	private DAOFolios daoFolios;
+	/*
+	AccesoBD ClaseAccesoBD = new AccesoBD();
+	Connection con = ClaseAccesoBD.crearConexion();
 
 	public void agregarFolio(VOFolio voF) {
-		 try 
-		 {
-			 if(!daoFolios.member(voF.getCodigo()))
-			 {
-				 Folio folio = new Folio(voF.getCodigo(), voF.getCaratula(), voF.getPaginas());
-			 	 daoFolios.insert(folio);
-			 }	
-		 } catch(PersistenciaException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-		 }
+		try {
+			if (!ClaseAccesoBD.ExisteFolio(con, voF.getCodigo()))
+				ClaseAccesoBD.AgregarFolio(null, voF);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
-	/*
+
 	public void agregarRevision(String codF, String desc) {
 		try {
 			if (ClaseAccesoBD.ExisteFolio(con, codF)) {
@@ -47,19 +37,19 @@ public class Fachada {
 			e.printStackTrace();
 		}
 	}
-	*/
+
 	public void borrarFolioRevisiones(String codF) {
 		try {
-			if (daoFolios.member(codF)) {
-				// ClaseAccesoBD.BorrarFolioRevisiones(con, codF);  Acá me genera dudas lo que dice de que accede interno
-				daoFolios.delete(codF);
+			if (ClaseAccesoBD.ExisteFolio(con, codF)) {
+				ClaseAccesoBD.BorrarFolioRevisiones(con, codF);
+				ClaseAccesoBD.BorrarFolio(con, codF);
 			}
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	/*
+
 	public String darDescripcion(String codF, int numR) {
 		String descripcion = null;
 		try {
@@ -74,33 +64,17 @@ public class Fachada {
 		}
 		return descripcion;
 	}
-	*/
+	
 	public List<VOFolio> listarFolios() {
 		List<VOFolio> Folios = null;
 		try {
-			Folios = daoFolios.listarFolios();
+			Folios = ClaseAccesoBD.ListarFolios(con);
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return Folios;
 	}
-	/*
-	public List<VORevision> listarRevisiones (String codF)
-	{
-	
-	}
 	*/
-	public VOFolioMaxRev folioMasRevisado ()
-	{
-		VOFolioMaxRev voFolMaxRev = null;
-		try {
-			daoFolios.folioMasRevisado();
-		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return voFolMaxRev;
-	}
 
 }
