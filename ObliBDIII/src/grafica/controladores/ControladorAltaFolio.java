@@ -28,7 +28,7 @@ public class ControladorAltaFolio {
 			VOFolio VOF = new VOFolio(cod, car, pagInt);
 			try {
 				fac.agregarFolio(VOF);
-				VAF.mostrarResultado("El alumno fue inscripto correctamente");
+				VAF.mostrarResultado("El folio fue añadido correctamente");
 			} catch (RemoteException e) {
 				VAF.mostrarResultado("Error de conexión con el servidor");
 				e.printStackTrace();
