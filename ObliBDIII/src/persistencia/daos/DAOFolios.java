@@ -1,5 +1,8 @@
 package persistencia.daos;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,10 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import logica.Folio;
 import logica.excepciones.PersistenciaException;
-import logica.valueObjects.VORevision;
 import logica.valueObjects.*;
 import persistencia.consultas.Consultas;
 
@@ -20,11 +23,23 @@ public class DAOFolios {
 	private String url;
 	private String user;
 	private String passw;
-	
+
 	public DAOFolios() throws PersistenciaException {
-		// levantar de properties los datos para conectar a la base
+		Properties prop = new Properties();
+		String nomArch = "config/conexion.properties";
+		try {
+			prop.load(new FileInputStream(nomArch));
+			driver = prop.getProperty("driver");
+			url = prop.getProperty("url");
+			user = prop.getProperty("user");
+			passw = prop.getProperty("passw");
+		} catch (FileNotFoundException e) {
+			throw new PersistenciaException("Error al acceder al archivo de configuración");
+		} catch (IOException e) {
+			throw new PersistenciaException("Error de lectura de archivo");
+		}
 	}
-	
+
 	public boolean member(String cod) throws PersistenciaException {
 		Consultas cons = new Consultas();
 		boolean existe = false;
@@ -108,7 +123,7 @@ public class DAOFolios {
 		}
 	}
 
-	public boolean esVacio() throws PersistenciaException{
+	public boolean esVacio() throws PersistenciaException {
 		try {
 			boolean vacio = true;
 			Connection con = DriverManager.getConnection(url, user, passw);
@@ -116,7 +131,7 @@ public class DAOFolios {
 			String query = cons.ListarFolios();
 			PreparedStatement pstmt = con.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery(query);
-			if(rs.next()) {
+			if (rs.next()) {
 				vacio = false;
 			}
 			return vacio;
@@ -134,7 +149,8 @@ public class DAOFolios {
 			Statement pstmt = con.createStatement();
 			ResultSet rs = pstmt.executeQuery(query);
 			if (rs.next()) {
-				fol = new VOFolioMaxRev(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("pagina"), rs.getInt("cantidad"));
+				fol = new VOFolioMaxRev(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("pagina"),
+						rs.getInt("cantidad"));
 			}
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error de acceso a datos.");

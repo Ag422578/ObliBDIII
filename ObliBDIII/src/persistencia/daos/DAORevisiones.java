@@ -1,5 +1,8 @@
 package persistencia.daos;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import logica.Revision;
 import logica.excepciones.PersistenciaException;
@@ -23,7 +27,19 @@ public class DAORevisiones {
 
 	public DAORevisiones(String codF) throws PersistenciaException {
 		this.codigoFolio = codF;
-		// levantar de properties los datos para conectar a la base
+		Properties prop = new Properties();
+		String nomArch = "config/conexion.properties";
+		try {
+			prop.load(new FileInputStream(nomArch));
+			driver = prop.getProperty("driver");
+			url = prop.getProperty("url");
+			user = prop.getProperty("user");
+			passw = prop.getProperty("passw");
+		} catch (FileNotFoundException e) {
+			throw new PersistenciaException("Error al acceder al archivo de configuración");
+		} catch (IOException e) {
+			throw new PersistenciaException("Error de lectura de archivo");
+		}
 	}
 
 	public void insBack(Revision rev) throws PersistenciaException {

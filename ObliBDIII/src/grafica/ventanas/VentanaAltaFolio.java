@@ -79,6 +79,7 @@ public class VentanaAltaFolio {
 		frmAltaDeFolio.getContentPane().add(txtPag);
 
 		JTextArea txtrIngreseLosDatos = new JTextArea();
+		txtrIngreseLosDatos.setEditable(false);
 		txtrIngreseLosDatos.setForeground(SystemColor.text);
 		txtrIngreseLosDatos.setBackground(SystemColor.activeCaption);
 		txtrIngreseLosDatos.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -92,6 +93,7 @@ public class VentanaAltaFolio {
 				String cod = txtCod.getText();
 				String car = txtCar.getText();
 				String pag = txtPag.getText();
+				controlador.AltaFolio(cod, car, pag);
 				txtCod.setText("");
 				txtCar.setText("");
 				txtPag.setText("");

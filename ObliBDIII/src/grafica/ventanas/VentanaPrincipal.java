@@ -68,46 +68,46 @@ public class VentanaPrincipal {
 		mnFolio.setFont(new Font("Arial", Font.PLAIN, 15));
 		menuBar.add(mnFolio);
 
-		// ALTA DE UN ALUMNO
+		// ALTA DE UN FOLIO
 		JMenuItem mntmAltaFolio = new JMenuItem("Alta de un folio");
 		mntmAltaFolio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// VentanaAltaAlumno Ventana = new VentanaAltaAlumno();
-				// Ventana.setVisible(true);
+				VentanaAltaFolio Ventana = new VentanaAltaFolio();
+				Ventana.setVisible(true);
 			}
 		});
 		mntmAltaFolio.setFont(new Font("Arial", Font.PLAIN, 12));
 		mnFolio.add(mntmAltaFolio);
 
-		// LISTAR ALUMNO POR APELLIDO
+		// BAJA DE UN FOLIO
 		JMenuItem mntmBajaFolio = new JMenuItem("Baja de un folio");
 		mntmBajaFolio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// VentanaListadoAlumnosApe VentanaAlApe = new VentanaListadoAlumnosApe();
-				// VentanaAlApe.setVisible(true);
+				VentanaBorradoFolio Ventana = new VentanaBorradoFolio();
+				Ventana.setVisible(true);
 			}
 		});
 		mntmBajaFolio.setFont(new Font("Arial", Font.PLAIN, 12));
 		mnFolio.add(mntmBajaFolio);
 
-		// LISTAR ALUMNO POR CEDULA
+		// LISTADO DE FOLIOS
 		JMenuItem mntmListFolio = new JMenuItem("Listado de folios");
 		mntmListFolio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// VentanaListadoAlumnosCed VentanaAlCed = new VentanaListadoAlumnosCed();
-				// VentanaAlCed.setVisible(true);
+				VentanaListadoFolios Ventana = new VentanaListadoFolios();
+				Ventana.setVisible(true);
 			}
 		});
 		mntmListFolio.setFont(new Font("Arial", Font.PLAIN, 12));
 		mnFolio.add(mntmListFolio);
 
-		// INSCRIPCION DE ALUMNO A ASIGNATURA
+		// FOLIO CON MAS REVISIONES
 		JMenuItem mntmMaxRevFolio = new JMenuItem("Folio con más revisiones");
 		mntmMaxRevFolio.setFont(new Font("Arial", Font.PLAIN, 12));
 		mntmMaxRevFolio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// VentanaInscripcionAsig VentanaInsc = new VentanaInscripcionAsig();
-				// VentanaInsc.setVisible(true);
+				VentanaFolioMasRevisado Ventana = new VentanaFolioMasRevisado();
+				Ventana.setVisible(true);
 			}
 		});
 		mnFolio.add(mntmMaxRevFolio);
@@ -117,29 +117,36 @@ public class VentanaPrincipal {
 		mnRevisiones.setFont(new Font("Arial", Font.PLAIN, 15));
 		menuBar.add(mnRevisiones);
 
-		// ALTA DE ASIGNATURAS
+		// ALTA DE REVISIONES
 		JMenuItem mntmAltaRev = new JMenuItem("Alta de una revisión");
 		mntmAltaRev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// VentanaAltaAsignatura VentanaAltasig = new VentanaAltaAsignatura();
-				// VentanAltasig.setVisible(true);
+				VentanaAltaRevision Ventana = new VentanaAltaRevision();
+				Ventana.setVisible(true);
 			}
 		});
 		mntmAltaRev.setFont(new Font("Arial", Font.PLAIN, 12));
 		mnRevisiones.add(mntmAltaRev);
 
-		// LISTADO DE ASIGNATURAS
+		// DAR DESCRIPCION DE UNA REVISIÓN
 		JMenuItem mntmDescRev = new JMenuItem("Obtener descripción de una revisión");
 		mntmDescRev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// VentanaListadoAsig VentanaListAsig = new VentanaListadoAsig();
-				// VentanaListAsig.setVisible(true);
+				VentanaDarDescripcionRevision Ventana = new VentanaDarDescripcionRevision();
+				Ventana.setVisible(true);
 			}
 		});
 		mntmDescRev.setFont(new Font("Arial", Font.PLAIN, 12));
 		mnRevisiones.add(mntmDescRev);
 
+		// LISTADO DE REVISIONES
 		JMenuItem mntmListRev = new JMenuItem("Listado de revisiones");
+		mntmListRev.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VentanaListadoRevisiones Ventana = new VentanaListadoRevisiones();
+				Ventana.setVisible(true);
+			}
+		});
 		mntmListRev.setFont(new Font("Arial", Font.PLAIN, 12));
 		mnRevisiones.add(mntmListRev);
 
