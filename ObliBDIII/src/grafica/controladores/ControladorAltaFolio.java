@@ -1,6 +1,13 @@
 package grafica.controladores;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Properties;
+import java.io.FileInputStream;
 
 import grafica.ventanas.VentanaAltaFolio;
 import logica.IFachada;
@@ -8,13 +15,44 @@ import logica.excepciones.LogicaException;
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.VOFolio;
 
+
 public class ControladorAltaFolio {
 	private IFachada fac;
 	private VentanaAltaFolio VAF;
 
 	public ControladorAltaFolio(VentanaAltaFolio VAF) {
 		this.VAF = VAF;
+		
+			
+		//////// RMI /////////
+		 try 
+			{
+				 	
+				//obtengo ip y puerto de un archivo de configuracion
+				Properties p = new Properties();
+				String nomArch = "config/config.properties";
+				p.load (new FileInputStream (nomArch));
+				String ip = p.getProperty("ipServidor");
+				String puerto = p.getProperty("puertoServidor");
+				String ruta = "//" + ip + ":" + puerto + "/Fachada";
+				
+				//accedo remotamente a la fachada publicada en el servidor
+				fac = (IFachada) Naming.lookup(ruta);}
+		 		catch (MalformedURLException e){e.printStackTrace();}
+			 	catch (RemoteException e){e.printStackTrace();}
+			 	catch (NotBoundException e) // si la ruta esta bien formada pero el servidor esta bajo
+			 		{e.printStackTrace();}
+			 	catch (FileNotFoundException e) // si no encuentra el archivo de configuracion
+			 		{e.printStackTrace();}
+			 	catch (IOException e) // si ocurre cualquier otro error de E/S
+			 		{e.printStackTrace();} 	
+			 
+			 
 	}
+
+		
+	
+	
 
 	public void AltaFolio(String cod, String car, String pag) {
 		if (String.valueOf(pag) == null || String.valueOf(pag).equals(""))
@@ -33,6 +71,7 @@ public class ControladorAltaFolio {
 				VAF.mostrarResultado("Error de conexión con el servidor");
 				e.printStackTrace();
 			} catch (PersistenciaException e) {
+				e.printStackTrace();
 				VAF.mostrarResultado("Error de persistencia con el servidor");
 			} catch (LogicaException e) {
 				VAF.mostrarResultado("Error al intentar añadir el folio");

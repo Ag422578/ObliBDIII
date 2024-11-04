@@ -35,6 +35,7 @@ public class DAOFolios {
 			passw = prop.getProperty("passw");
 		} catch (FileNotFoundException e) {
 			throw new PersistenciaException("Error al acceder al archivo de configuración");
+		
 		} catch (IOException e) {
 			throw new PersistenciaException("Error de lectura de archivo");
 		}
@@ -44,14 +45,18 @@ public class DAOFolios {
 		Consultas cons = new Consultas();
 		boolean existe = false;
 		String query = cons.ExisteFolio();
+		
 		try {
 			Connection con = DriverManager.getConnection(url, user, passw);
-			Statement pstmt = con.createStatement();
-			ResultSet rs = pstmt.executeQuery(query);
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, cod);
+			ResultSet rs = pstmt.executeQuery();
+			
 			if (rs.next()) {
 				existe = true;
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new PersistenciaException("Error de acceso a datos.");
 		}
 		return existe;

@@ -1,10 +1,12 @@
 package logica.valueObjects;
 
-public class VOFolio {
+import java.io.Serializable;
+
+public class VOFolio implements Serializable{
 	private String codigo;
 	private String caratula;
 	private int paginas;
-	
+	private static final long serialVersionUID = 1L;
 	
 	public VOFolio(String codigo, String caratula, int paginas) {
 		super();

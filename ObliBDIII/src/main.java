@@ -15,8 +15,6 @@ public class main {
 	           String nomArch = "config/conexion.properties";
 	           prop.load(new FileInputStream(nomArch));
 
-	           CrearBaseDeDatos(prop);
-
 	           String driver = prop.getProperty("driver");
 	           String url = prop.getProperty("url");
 	           String user = prop.getProperty("user");
@@ -25,7 +23,7 @@ public class main {
 	           Class.forName(driver);
 	           Connection con = DriverManager.getConnection(url , user, passw);
 
-	           String crearTablaFolios = "CREATE TABLE Estudio.Folios (codigo VARCHAR(60) not null primary key, caratula VARCHAR(60) not null, paginas INT not null);";
+	           /*String crearTablaFolios = "CREATE TABLE Estudio.Folios (codigo VARCHAR(60) not null primary key, caratula VARCHAR(60) not null, paginas INT not null);";
 
 	           String crearTablaRevisiones = "CREATE TABLE Estudio.Revisiones (numero INT not null, codFolio VARCHAR(60) not null, descripcion VARCHAR(60) not null, primary key (numero, codFolio), foreign key (codFolio) references Estudio.Folios (codigo));";
 	           
@@ -47,14 +45,14 @@ public class main {
 	           
 	           stm1.close();
 	           stm2.close();
-	           stm4.close();
+	           stm4.close();*/
 	           
 	       } catch (Exception e) {
 	           e.printStackTrace();
 	       }
 	   }
 
-	   private static void CrearBaseDeDatos(Properties prop) throws ClassNotFoundException, SQLException {
+	  /* private static void CrearBaseDeDatos(Properties prop) throws ClassNotFoundException, SQLException {
 	       String driver = prop.getProperty("driver");
 	       String url = prop.getProperty("url");
 	       String user = prop.getProperty("user");
@@ -69,9 +67,13 @@ public class main {
 	       stm.executeUpdate(crearBaseQry);
 
 	       con.close();
-	   }
+	   }*/	
+	
+		
 
 
 
+		 
 }
+
 

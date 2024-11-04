@@ -2,6 +2,7 @@
 package logica;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
@@ -16,10 +17,23 @@ import persistencia.daos.DAOFolios;
 /*import Ejercicio3.LogicaPersistencia.Excepciones.PersistenciaException;
 import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
 
-public class Fachada implements IFachada {
+public class Fachada extends UnicastRemoteObject implements IFachada {
+	
 	private DAOFolios Folios;
+	
+	
+	private static final long serialVersionUID = 1L;
+	
+	public Fachada() throws RemoteException, PersistenciaException {
+		super();
+		// TODO Auto-generated constructor stub
+		Folios= new DAOFolios();
+	}
+	
 
 	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException {
+		
+		System.out.print(voF.getCodigo());
 		if (!Folios.member(voF.getCodigo())) {
 			Folio folio = new Folio(voF.getCodigo(), voF.getCaratula(), voF.getPaginas());
 			Folios.insert(folio);
