@@ -84,8 +84,9 @@ public class DAOFolios {
 		String query = cons.ExisteFolio();
 		try {
 			Connection con = DriverManager.getConnection(url, user, passw);
-			Statement pstmt = con.createStatement();
-			ResultSet rs = pstmt.executeQuery(query);
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, cod);
+			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				fol = new Folio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
 			}

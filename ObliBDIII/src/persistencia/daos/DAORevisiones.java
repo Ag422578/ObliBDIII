@@ -49,11 +49,12 @@ public class DAORevisiones {
 			String query = cons.AgregarRevision();
 			PreparedStatement pstmt = con.prepareStatement(query);
 			pstmt.setInt(1, rev.getNumero());
-			pstmt.setString(2, rev.getDescripcion());
-			pstmt.setString(3, codigoFolio);
+			pstmt.setString(2, codigoFolio);
+			pstmt.setString(3, rev.getDescripcion());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new PersistenciaException("Error de acceso a datos.");
 		}
 	}

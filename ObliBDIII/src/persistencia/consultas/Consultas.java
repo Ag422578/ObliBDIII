@@ -27,7 +27,7 @@ public class Consultas {
 	}
 
 	public String AgregarRevision() {
-		return "INSERT INTO Revisiones VALUES (?,?,?)";
+		return "INSERT INTO Revisiones(numero, codFolio, descripcion)  VALUES (?,?,?)";
 	}
 
 	public String BorrarFolioRevisiones() {

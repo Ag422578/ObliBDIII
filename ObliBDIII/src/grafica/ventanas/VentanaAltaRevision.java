@@ -44,7 +44,7 @@ public class VentanaAltaRevision {
 		frmAltaDeRevision.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmAltaDeRevision.getContentPane().setLayout(null);
 
-		JLabel lblNum = new JLabel("Número");
+		JLabel lblNum = new JLabel("Cod.Folio");
 		lblNum.setForeground(SystemColor.text);
 		lblNum.setFont(new Font("Arial", Font.PLAIN, 20));
 		lblNum.setBounds(10, 46, 97, 32);

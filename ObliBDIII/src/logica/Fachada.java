@@ -13,6 +13,7 @@ import logica.valueObjects.VOFolio;
 import logica.valueObjects.VOFolioMaxRev;
 import logica.valueObjects.VORevision;
 import persistencia.daos.DAOFolios;
+import persistencia.daos.DAORevisiones;
 
 /*import Ejercicio3.LogicaPersistencia.Excepciones.PersistenciaException;
 import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
@@ -21,13 +22,13 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	
 	private DAOFolios Folios;
 	
-	
 	private static final long serialVersionUID = 1L;
 	
 	public Fachada() throws RemoteException, PersistenciaException {
 		super();
 		// TODO Auto-generated constructor stub
 		Folios= new DAOFolios();
+
 	}
 	
 
