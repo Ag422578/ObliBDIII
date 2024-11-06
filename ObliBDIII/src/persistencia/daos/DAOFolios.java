@@ -116,10 +116,10 @@ public class DAOFolios {
 			Consultas cons = new Consultas();
 			String query = cons.ListarFolios();
 			PreparedStatement pstmt = con.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery(query);
+			ResultSet rs = pstmt.executeQuery();
 			LinkedList<VOFolio> ListaFolios = new LinkedList<>();
 			while (rs.next()) {
-				VOFolio r = new VOFolio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("pagina"));
+				VOFolio r = new VOFolio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
 				ListaFolios.add(r);
 			}
 			rs.close();
@@ -155,7 +155,7 @@ public class DAOFolios {
 			Statement pstmt = con.createStatement();
 			ResultSet rs = pstmt.executeQuery(query);
 			if (rs.next()) {
-				fol = new VOFolioMaxRev(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("pagina"),
+				fol = new VOFolioMaxRev(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"),
 						rs.getInt("cantidad"));
 			}
 		} catch (SQLException e) {

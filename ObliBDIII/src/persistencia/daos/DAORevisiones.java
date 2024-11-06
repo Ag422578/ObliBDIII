@@ -106,7 +106,7 @@ public class DAORevisiones {
 			String query = cons.ListarRevisiones();
 			PreparedStatement pstmt = con.prepareStatement(query);
 			pstmt.setString(1, codigoFolio);
-			ResultSet rs = pstmt.executeQuery(query);
+			ResultSet rs = pstmt.executeQuery();
 			LinkedList<VORevision> ListaRevisiones = new LinkedList<>();
 			while (rs.next()) {
 				VORevision r = new VORevision(rs.getInt("numero"), rs.getString("descripcion"),

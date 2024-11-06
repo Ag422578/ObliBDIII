@@ -31,11 +31,11 @@ public class Consultas {
 	}
 
 	public String BorrarFolioRevisiones() {
-		return "DELETE * FROM Revisiones WHERE codFolio = ?";
+		return "DELETE FROM Revisiones WHERE codFolio = ?";
 	}
 
 	public String BorrarFolio() {
-		return "DELETE * FROM Folios WHERE codigo = ?";
+		return "DELETE FROM Folios WHERE codigo = ?";
 	}
 
 	public String DarDescripcion() {
@@ -51,8 +51,7 @@ public class Consultas {
 	}
 
 	public String FolioMasRevisado() {
-		return "SELECT *,(SELECT COUNT(*) FROM Revisiones WHERE codFolio = codigo) AS Cantidad FROM Folios a WHERE codigo IN "
-				+ "(SELECT codFolio from Revisiones GROUP BY codFolio ORDER BY COUNT(codFolio) DESC LIMIT 1)";
+		return "SELECT *,(SELECT COUNT(*) FROM Revisiones WHERE codFolio = codigo) AS Cantidad from Folios a JOIN (SELECT codFolio from Revisiones GROUP BY codFolio ORDER BY COUNT(codFolio) DESC LIMIT 1) a2 on a.codigo = a2.codFolio";
 	}
 	
 }

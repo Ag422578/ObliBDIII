@@ -24,5 +24,5 @@ public interface IFachada extends Remote {
 	
 	public List<VORevision> listarRevisiones(String codF) throws PersistenciaException, RemoteException, LogicaException;
 	
-	public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException;
+	public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException, LogicaException;
 }

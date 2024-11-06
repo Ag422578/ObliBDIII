@@ -96,8 +96,10 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		return ListadoRevisiones;
 	}
 
-	public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException {
+	public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException, LogicaException {
 		VOFolioMaxRev maxFolio = null;
+		if(Folios.esVacio())
+			throw new LogicaException("No existe ningún folio");
 		maxFolio = Folios.folioMasRevisado();
 		return maxFolio;
 	}
