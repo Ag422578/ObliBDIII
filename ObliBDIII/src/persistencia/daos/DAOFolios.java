@@ -136,7 +136,7 @@ public class DAOFolios {
 			Consultas cons = new Consultas();
 			String query = cons.ListarFolios();
 			PreparedStatement pstmt = con.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery(query);
+			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				vacio = false;
 			}

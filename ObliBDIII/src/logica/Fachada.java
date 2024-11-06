@@ -12,6 +12,8 @@ import logica.excepciones.PersistenciaException;
 import logica.valueObjects.VOFolio;
 import logica.valueObjects.VOFolioMaxRev;
 import logica.valueObjects.VORevision;
+import persistencia.IConexion;
+import persistencia.PoolConexiones;
 import persistencia.daos.DAOFolios;
 import persistencia.daos.DAORevisiones;
 
@@ -24,23 +26,36 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private PoolConexiones pool;
+	
 	public Fachada() throws RemoteException, PersistenciaException {
 		super();
 		// TODO Auto-generated constructor stub
 		Folios= new DAOFolios();
+		pool = new PoolConexiones();
 
 	}
 	
 
-	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException {
-		
-		System.out.print(voF.getCodigo());
+	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException, Exception {
+		IConexion con = null;
+		boolean ok = false, modifica = false;
+		con = pool.obtenerConexion(ok);
+		// esto no me acuerdo si se hace aca tmb
+		con.getConnection().setAutoCommit(false);
 		if (!Folios.member(voF.getCodigo())) {
 			Folio folio = new Folio(voF.getCodigo(), voF.getCaratula(), voF.getPaginas());
 			Folios.insert(folio);
+			modifica = true;
 		} else
 			throw new LogicaException("Error");
-
+		if(con != null) {
+			if(!modifica) {
+				pool.liberarConexion(con, modifica);
+			}
+			else
+				pool.liberarConexion(con, modifica);
+		}
 	}
 
 	public void agregarRevision(String codF, String desc)

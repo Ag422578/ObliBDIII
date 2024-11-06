@@ -12,7 +12,7 @@ import logica.valueObjects.VORevision;
 
 public interface IFachada extends Remote {
 	
-	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException;
+	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException, Exception;
 
 	public void agregarRevision(String codF, String desc) throws PersistenciaException, RemoteException, LogicaException;
 
