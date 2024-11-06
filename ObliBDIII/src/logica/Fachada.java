@@ -13,6 +13,7 @@ import logica.valueObjects.VOFolio;
 import logica.valueObjects.VOFolioMaxRev;
 import logica.valueObjects.VORevision;
 import persistencia.IConexion;
+import persistencia.IPoolConexiones;
 import persistencia.PoolConexiones;
 import persistencia.daos.DAOFolios;
 import persistencia.daos.DAORevisiones;
@@ -21,40 +22,32 @@ import persistencia.daos.DAORevisiones;
 import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
 
 public class Fachada extends UnicastRemoteObject implements IFachada {
-	
+
 	private DAOFolios Folios;
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	private PoolConexiones pool;
-	
+
+	private IPoolConexiones pool;
+
 	public Fachada() throws RemoteException, PersistenciaException {
 		super();
 		// TODO Auto-generated constructor stub
-		Folios= new DAOFolios();
-		pool = new PoolConexiones();
-
+		pool = (IPoolConexiones) new PoolConexiones(); // No estoy muy seguro si va esto
+		Folios = new DAOFolios();
 	}
-	
 
 	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException, Exception {
 		IConexion con = null;
-		boolean ok = false, modifica = false;
-		con = pool.obtenerConexion(ok);
-		// esto no me acuerdo si se hace aca tmb
-		con.getConnection().setAutoCommit(false);
+		boolean ok = false, modifica = true;
+		con = pool.obtenerConexion(modifica);
 		if (!Folios.member(voF.getCodigo())) {
 			Folio folio = new Folio(voF.getCodigo(), voF.getCaratula(), voF.getPaginas());
-			Folios.insert(folio);
-			modifica = true;
+			Folios.insert(folio, con);
+			ok = true;
 		} else
 			throw new LogicaException("Error");
-		if(con != null) {
-			if(!modifica) {
-				pool.liberarConexion(con, modifica);
-			}
-			else
-				pool.liberarConexion(con, modifica);
+		if (con != null) {
+			pool.liberarConexion(con, ok);
 		}
 	}
 
@@ -101,7 +94,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		return ListadoFolios;
 	}
 
-	public List<VORevision> listarRevisiones(String codF) throws PersistenciaException, RemoteException, LogicaException {
+	public List<VORevision> listarRevisiones(String codF)
+			throws PersistenciaException, RemoteException, LogicaException {
 		List<VORevision> ListadoRevisiones = null;
 		if (Folios.member(codF)) {
 			Folio fol = Folios.find(codF);
@@ -113,7 +107,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 
 	public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException, LogicaException {
 		VOFolioMaxRev maxFolio = null;
-		if(Folios.esVacio())
+		if (Folios.esVacio())
 			throw new LogicaException("No existe ningún folio");
 		maxFolio = Folios.folioMasRevisado();
 		return maxFolio;

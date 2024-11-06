@@ -75,6 +75,8 @@ public class ControladorAltaFolio {
 				VAF.mostrarResultado("Error de persistencia con el servidor");
 			} catch (LogicaException e) {
 				VAF.mostrarResultado("Error al intentar añadir el folio");
+			} catch (Exception e) {
+				VAF.mostrarResultado("Error al solicitar conexión");
 			}
 		}
 	}

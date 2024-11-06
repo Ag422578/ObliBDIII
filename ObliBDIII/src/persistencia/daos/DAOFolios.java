@@ -16,6 +16,7 @@ import java.util.Properties;
 import logica.Folio;
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.*;
+import persistencia.IConexion;
 import persistencia.consultas.Consultas;
 
 public class DAOFolios {
@@ -62,9 +63,9 @@ public class DAOFolios {
 		return existe;
 	}
 
-	public void insert(Folio fol) throws PersistenciaException {
+	public void insert(Folio fol, IConexion ICon ) throws PersistenciaException {
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection con = (Connection) ICon;
 			Consultas cons = new Consultas();
 			String query = cons.AgregarFolio();
 			PreparedStatement pstmt = con.prepareStatement(query);
