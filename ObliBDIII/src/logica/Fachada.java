@@ -18,6 +18,8 @@ import persistencia.PoolConexiones;
 import persistencia.daos.DAOFolios;
 import persistencia.daos.DAORevisiones;
 
+// VERSION STANDALONE
+
 /*import Ejercicio3.LogicaPersistencia.Excepciones.PersistenciaException;
 import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
 
