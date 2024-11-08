@@ -16,38 +16,23 @@ import java.util.Properties;
 import logica.Revision;
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.VORevision;
+import persistencia.Conexion;
+import persistencia.IConexion;
 import persistencia.consultas.Consultas;
 
 public class DAORevisiones {
-	private String driver;
-	private String url;
-	private String user;
-	private String passw;
 	private String codigoFolio;
 
 	public DAORevisiones(String codF) throws PersistenciaException {
 		this.codigoFolio = codF;
-		Properties prop = new Properties();
-		String nomArch = "config/conexion.properties";
-		try {
-			prop.load(new FileInputStream(nomArch));
-			driver = prop.getProperty("driver");
-			url = prop.getProperty("url");
-			user = prop.getProperty("user");
-			passw = prop.getProperty("passw");
-		} catch (FileNotFoundException e) {
-			throw new PersistenciaException("Error al acceder al archivo de configuración");
-		} catch (IOException e) {
-			throw new PersistenciaException("Error de lectura de archivo");
-		}
 	}
 
-	public void insBack(Revision rev) throws PersistenciaException {
+	public void insBack(Revision rev, IConexion con) throws PersistenciaException {
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.AgregarRevision();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setInt(1, rev.getNumero());
 			pstmt.setString(2, codigoFolio);
 			pstmt.setString(3, rev.getDescripcion());
@@ -59,13 +44,13 @@ public class DAORevisiones {
 		}
 	}
 
-	public int largo() throws PersistenciaException {
+	public int largo(IConexion con) throws PersistenciaException {
 		Consultas cons = new Consultas();
 		int num = 0;
 		String query = cons.cantidadRevisiones();
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
-			PreparedStatement pstmt = con.prepareStatement(query);
+			Connection connection = ((Conexion) con).getConnection();
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, codigoFolio);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -77,12 +62,12 @@ public class DAORevisiones {
 		return num;
 	}
 
-	public Revision kesimo(int numero) throws PersistenciaException {
+	public Revision kesimo(int numero, IConexion con) throws PersistenciaException {
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.listarRevision();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, codigoFolio);
 			pstmt.setInt(2, numero);
 			ResultSet rs = pstmt.executeQuery();
@@ -99,12 +84,12 @@ public class DAORevisiones {
 		}
 	}
 
-	public List<VORevision> listarRevisiones() throws PersistenciaException {
+	public List<VORevision> listarRevisiones(IConexion con) throws PersistenciaException {
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.ListarRevisiones();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, codigoFolio);
 			ResultSet rs = pstmt.executeQuery();
 			LinkedList<VORevision> ListaRevisiones = new LinkedList<>();
@@ -120,12 +105,12 @@ public class DAORevisiones {
 		}
 	}
 
-	public void borrarRevisiones() throws PersistenciaException {
+	public void borrarRevisiones(IConexion con) throws PersistenciaException {
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.BorrarFolioRevisiones();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, codigoFolio);
 			pstmt.executeUpdate();
 			pstmt.close();

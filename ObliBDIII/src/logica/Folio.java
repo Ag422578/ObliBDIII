@@ -2,8 +2,12 @@ package logica;
 
 import java.util.List;
 
+import java.sql.Connection;
+
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.*;
+import persistencia.Conexion;
+import persistencia.IConexion;
 import persistencia.daos.DAORevisiones;
 
 public class Folio {
@@ -30,36 +34,36 @@ public class Folio {
 		return paginas;
 	}
 
-	public boolean tieneRevision(int numR) throws PersistenciaException {
+	public boolean tieneRevision(int numR, IConexion con) throws PersistenciaException {
 		boolean existe = false;
-		if (secuencia.largo() >= numR)
+		if (secuencia.largo(con) >= numR)
 			existe = true;
 		return existe;
 	}
 
-	public int cantidadRevisiones() throws PersistenciaException {
+	public int cantidadRevisiones(IConexion con) throws PersistenciaException {
 		int largo = 0;
-		largo = secuencia.largo();
+		largo = secuencia.largo(con);
 		return largo;
 	}
 
-	public void addRevision(Revision rev) throws PersistenciaException {
-		secuencia.insBack(rev);
+	public void addRevision(Revision rev, IConexion con) throws PersistenciaException {
+		secuencia.insBack(rev,con);
 	}
 
-	public Revision obtenerRevision(int numR) throws PersistenciaException {
+	public Revision obtenerRevision(int numR, IConexion con) throws PersistenciaException {
 		Revision rev = null;
-		rev = secuencia.kesimo(numR);
+		rev = secuencia.kesimo(numR,con);
 		return rev;
 	}
 
-	public List<VORevision> listarRevisiones() throws PersistenciaException {
+	public List<VORevision> listarRevisiones(IConexion con) throws PersistenciaException {
 		List<VORevision> revisiones = null;
-		revisiones = secuencia.listarRevisiones();
+		revisiones = secuencia.listarRevisiones(con);
 		return revisiones;
 	}
 
-	public void borrarRevisiones() throws PersistenciaException {
-		secuencia.borrarRevisiones();
+	public void borrarRevisiones(IConexion con) throws PersistenciaException {
+		secuencia.borrarRevisiones(con);
 	}
 }

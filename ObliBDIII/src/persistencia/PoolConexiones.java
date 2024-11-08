@@ -4,11 +4,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
+
+import java.sql.Connection;
 
 import logica.excepciones.PersistenciaException;
 
-public class PoolConexiones {
+public class PoolConexiones implements IPoolConexiones {
 	private String driver, url, user, password;
 	private int nivelTransaccionalidad;
 	private Conexion[] conexiones;
@@ -29,41 +32,59 @@ public class PoolConexiones {
 		} catch (IOException e) {
 			throw new PersistenciaException("Error de lectura de archivo");
 		}
-		nivelTransaccionalidad = 0;
+		nivelTransaccionalidad = Connection.TRANSACTION_SERIALIZABLE;
 		creadas = 0;
 		tope = 0;
-		tamanio = 3;
+		tamanio = 3; // leerlo del properties
 		conexiones = new Conexion[tamanio];
 	}
 
-	public IConexion obtenerConexion(boolean modifica) throws Exception {
+	public synchronized IConexion obtenerConexion(boolean modifica) throws PersistenciaException {
 		IConexion con = null;
-		while (tope == 0 && creadas == tamanio)
-			wait();
-		if (tope != 0) {
-			con = (IConexion) conexiones[tope];
-			tope--;
-			if (modifica)
-				nivelTransaccionalidad = 1;
-		} else if (creadas != tamanio) {
-			con = (IConexion) DriverManager.getConnection(url, user, password);
-			creadas++;
-			if (modifica)
-				nivelTransaccionalidad = 1;
+		try
+		{
+			while(con == null)
+			{
+				if (tope > 0) {
+					con = (IConexion) conexiones[tope-1];
+					tope--;
+				} else if (creadas < tamanio) {
+					Connection connection = DriverManager.getConnection(url, user, password);
+					con = new Conexion(connection);
+					creadas++;
+					} else 
+					{
+						wait();
+					}
+			}	
+			((Conexion)con).getConnection().setAutoCommit(false);
+			((Conexion)con).getConnection().setTransactionIsolation(nivelTransaccionalidad);
+		}catch(SQLException ex) {
+			throw new PersistenciaException("Error al obtener conexión");
+		} catch (InterruptedException e) {
+			throw new PersistenciaException("Error al obtener conexión");
 		}
 		return con;
 	}
 
-	public void liberarConexion(IConexion con, boolean ok) throws Exception {
-		if (nivelTransaccionalidad != 0) {
-			if (ok) {
-				((Conexion) con).getConnection().commit();
-			} else {
-				((Conexion) con).getConnection().rollback();
+	public synchronized void liberarConexion(IConexion con, boolean ok) throws PersistenciaException {
+		try
+		{
+			if (nivelTransaccionalidad != 0) {
+				if (ok) {
+					((Conexion) con).getConnection().commit();
+				} else {
+					((Conexion) con).getConnection().rollback();
+				}
 			}
+			conexiones[tope] = (Conexion) con;
+			tope++;
+			notify();
+		}catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new PersistenciaException("Error al liberar conexión");
 		}
-		conexiones[tope] = (Conexion) con;
-		tope++;
-		notify();
+		
 	}
 }

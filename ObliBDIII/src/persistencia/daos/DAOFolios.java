@@ -16,40 +16,22 @@ import java.util.Properties;
 import logica.Folio;
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.*;
+import persistencia.Conexion;
 import persistencia.IConexion;
 import persistencia.consultas.Consultas;
 
 public class DAOFolios {
-	private String driver;
-	private String url;
-	private String user;
-	private String passw;
 
 	public DAOFolios() throws PersistenciaException {
-		Properties prop = new Properties();
-		String nomArch = "config/conexion.properties";
-		try {
-			prop.load(new FileInputStream(nomArch));
-			driver = prop.getProperty("driver");
-			url = prop.getProperty("url");
-			user = prop.getProperty("user");
-			passw = prop.getProperty("passw");
-		} catch (FileNotFoundException e) {
-			throw new PersistenciaException("Error al acceder al archivo de configuración");
-		
-		} catch (IOException e) {
-			throw new PersistenciaException("Error de lectura de archivo");
-		}
 	}
 
-	public boolean member(String cod) throws PersistenciaException {
+	public boolean member(String cod, IConexion con) throws PersistenciaException {
 		Consultas cons = new Consultas();
 		boolean existe = false;
-		String query = cons.ExisteFolio();
-		
+		String query = cons.ExisteFolio();		
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
-			PreparedStatement pstmt = con.prepareStatement(query);
+			Connection connection = ((Conexion) con).getConnection();
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, cod);
 			ResultSet rs = pstmt.executeQuery();
 			
@@ -63,12 +45,12 @@ public class DAOFolios {
 		return existe;
 	}
 
-	public void insert(Folio fol, IConexion ICon ) throws PersistenciaException {
+	public void insert(Folio fol, IConexion con) throws PersistenciaException {
 		try {
-			Connection con = (Connection) ICon;
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.AgregarFolio();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, fol.getCodigo());
 			pstmt.setString(2, fol.getCaratula());
 			pstmt.setInt(3, fol.getPaginas());
@@ -79,13 +61,13 @@ public class DAOFolios {
 		}
 	}
 
-	public Folio find(String cod) throws PersistenciaException {
+	public Folio find(String cod, IConexion con) throws PersistenciaException {
 		Consultas cons = new Consultas();
 		Folio fol = null;
 		String query = cons.ExisteFolio();
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
-			PreparedStatement pstmt = con.prepareStatement(query);
+			Connection connection = ((Conexion) con).getConnection();
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, cod);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -97,12 +79,12 @@ public class DAOFolios {
 		return fol;
 	}
 
-	public void delete(String cod) throws PersistenciaException {
+	public void delete(String cod, IConexion con) throws PersistenciaException {
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.BorrarFolio();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, cod);
 			pstmt.executeUpdate();
 			pstmt.close();
@@ -111,12 +93,12 @@ public class DAOFolios {
 		}
 	}
 
-	public List<VOFolio> listarFolios() throws PersistenciaException {
+	public List<VOFolio> listarFolios(IConexion con) throws PersistenciaException {
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.ListarFolios();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery();
 			LinkedList<VOFolio> ListaFolios = new LinkedList<>();
 			while (rs.next()) {
@@ -130,13 +112,13 @@ public class DAOFolios {
 		}
 	}
 
-	public boolean esVacio() throws PersistenciaException {
+	public boolean esVacio(IConexion con) throws PersistenciaException {
 		try {
 			boolean vacio = true;
-			Connection con = DriverManager.getConnection(url, user, passw);
+			Connection connection = ((Conexion) con).getConnection();
 			Consultas cons = new Consultas();
 			String query = cons.ListarFolios();
-			PreparedStatement pstmt = con.prepareStatement(query);
+			PreparedStatement pstmt = connection.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				vacio = false;
@@ -147,13 +129,13 @@ public class DAOFolios {
 		}
 	}
 
-	public VOFolioMaxRev folioMasRevisado() throws PersistenciaException {
+	public VOFolioMaxRev folioMasRevisado(IConexion con) throws PersistenciaException {
 		Consultas cons = new Consultas();
 		VOFolioMaxRev fol = null;
 		String query = cons.FolioMasRevisado();
 		try {
-			Connection con = DriverManager.getConnection(url, user, passw);
-			Statement pstmt = con.createStatement();
+			Connection connection = ((Conexion) con).getConnection();
+			Statement pstmt = connection.createStatement();
 			ResultSet rs = pstmt.executeQuery(query);
 			if (rs.next()) {
 				fol = new VOFolioMaxRev(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"),

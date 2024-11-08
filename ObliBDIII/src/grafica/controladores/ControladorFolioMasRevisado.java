@@ -65,7 +65,7 @@ public class ControladorFolioMasRevisado {
 		} catch (PersistenciaException e) {
 			VFMR.mostrarResultado("Error de persistencia");
 		} catch (LogicaException e) {
-			VFMR.mostrarResultado("Error de lógica");
+			VFMR.mostrarResultado("Error al obtener el folio más revisado");
 		}
 	}
 }
