@@ -69,12 +69,10 @@ public class ControladorAltaFolio {
 				VAF.mostrarResultado("El folio fue añadido correctamente");
 			} catch (RemoteException e) {
 				VAF.mostrarResultado("Error de conexión con el servidor");
-				e.printStackTrace();
 			} catch (PersistenciaException e) {
-				e.printStackTrace();
-				VAF.mostrarResultado("Error de persistencia con el servidor");
+				VAF.mostrarResultado(e.getMensaje());
 			} catch (LogicaException e) {
-				VAF.mostrarResultado("Error al intentar añadir el folio");
+				VAF.mostrarResultado(e.getMensaje());
 			} catch (Exception e) {
 				VAF.mostrarResultado("Error al solicitar conexión");
 			}

@@ -51,9 +51,9 @@ public class ControladorBorradoFolio {
 			VBF.mostrarResultado("Error de conexión con el servidor");
 		} catch (PersistenciaException e) {
 			e.printStackTrace();
-			VBF.mostrarResultado("Error de persistencia con el servidor");
+			VBF.mostrarResultado(e.getMensaje());
 		} catch (LogicaException e) {
-			VBF.mostrarResultado("Error al intentar borrar el folio");
+			VBF.mostrarResultado(e.getMensaje());
 		}
 	}
 }

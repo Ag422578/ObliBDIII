@@ -78,7 +78,7 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 	                     ObjectInputStream in = new ObjectInputStream(fileIn)) {
 	                    
 	                	VOFolio vo =  (VOFolio) in.readObject();
-	    				return  new Folio(vo.getCodigo(), vo.getCaratula(), vo.getPaginas());
+	    				// return  new Folio(vo.getCodigo(), vo.getCaratula(), vo.getPaginas());
 	                    
 	                } catch (IOException | ClassNotFoundException e) {
 	                    e.printStackTrace();

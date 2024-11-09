@@ -60,12 +60,10 @@ public class ControladorAltaRevision {
 				VAR.mostrarResultado("La revisión fue añadida correctamente");
 			} catch (RemoteException e) {
 				VAR.mostrarResultado("Error de conexión con el servidor");
-				e.printStackTrace();
 			} catch (PersistenciaException e) {
-				VAR.mostrarResultado("Error de persistencia con el servidor");
-				e.printStackTrace();
+				VAR.mostrarResultado(e.getMensaje());
 			} catch (LogicaException e) {
-				VAR.mostrarResultado("Error al intentar añadir la revisión");
+				VAR.mostrarResultado(e.getMensaje());
 			}
 		}
 	}

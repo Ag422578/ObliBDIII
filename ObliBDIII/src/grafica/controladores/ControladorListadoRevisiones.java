@@ -58,15 +58,19 @@ public class ControladorListadoRevisiones {
 			while (VLR.tableListadoRevisiones.getRowCount() != 0)
 				dm.removeRow(VLR.tableListadoRevisiones.getRowCount() - 1);
 			List<VORevision> Revisiones = fac.listarRevisiones(codF);
-			for (int i = 0; i < Revisiones.size(); i++) {
-				dm.addRow(new Object[] { Revisiones.get(i).getNumero(), Revisiones.get(i).getDescripcion() });
+			if (Revisiones.isEmpty()) {
+				VLR.mostrarResultado("No existen revisiones en el sistema para ese folio");
+			} else {
+				for (int i = 0; i < Revisiones.size(); i++) {
+					dm.addRow(new Object[] { Revisiones.get(i).getNumero(), Revisiones.get(i).getDescripcion() });
+				}
 			}
 		} catch (RemoteException e) {
 			VLR.mostrarResultado("Error de conexion con el servidor");
 		} catch (PersistenciaException e) {
-			VLR.mostrarResultado("Error de persistencia");
+			VLR.mostrarResultado(e.getMensaje());
 		} catch (LogicaException e) {
-			VLR.mostrarResultado("Error de lógica");
+			VLR.mostrarResultado(e.getMensaje());
 		}
 
 	}

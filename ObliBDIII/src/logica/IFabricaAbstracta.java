@@ -6,5 +6,5 @@ import persistencia.daos.IDAORevisiones;
 
 public interface IFabricaAbstracta {
 	public IDAORevisiones crearIDAORevisiones (String codFolio)  throws PersistenciaException;
-	public IDAOFolios crearIDAOFolios () throws PersistenciaException;
+	public IDAOFolios crearIDAOFolios (IFabricaAbstracta fab) throws PersistenciaException;
 }

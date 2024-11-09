@@ -16,7 +16,7 @@ public class FabricaArchivo implements IFabricaAbstracta {
 		return dao;
 	}
 
-	public IDAOFolios crearIDAOFolios() throws PersistenciaException {
+	public IDAOFolios crearIDAOFolios(IFabricaAbstracta fab) throws PersistenciaException {
 		try {
 			return new DAOFoliosArchivo();
 		} catch (PersistenciaException e) {

@@ -1,9 +1,15 @@
 package logica;
 
-public class Revision {
+import java.io.Serializable;
+
+public class Revision implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int numero;
 	private String descripcion;
-	
+
 	public Revision(int num, String desc) {
 		this.numero = num;
 		this.descripcion = desc;
@@ -16,6 +22,5 @@ public class Revision {
 	public String getDescripcion() {
 		return descripcion;
 	}
-	
-	
+
 }

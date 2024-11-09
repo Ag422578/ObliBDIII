@@ -67,8 +67,7 @@ public class ControladorListadoFolios {
 		} catch (RemoteException e) {
 			VLF.mostrarResultado("Error de conexion con el servidor");
 		} catch (PersistenciaException e) {
-			e.printStackTrace();
-			VLF.mostrarResultado("Error de persistencia");
+			VLF.mostrarResultado(e.getMensaje());
 		}
 
 	}

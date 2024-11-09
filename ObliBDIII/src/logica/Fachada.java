@@ -28,21 +28,22 @@ import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
 public class Fachada extends UnicastRemoteObject implements IFachada, Serializable {
 
 	private IDAOFolios Folios;
-	private IDAORevisiones Revisiones;
-
 	private static final long serialVersionUID = 1L;
 
 	private IPoolConexiones pool;
+	private IFabricaAbstracta fabrica;
 
-	public Fachada() throws PersistenciaException, InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, FileNotFoundException, IOException {
+	public Fachada() throws PersistenciaException, InstantiationException, IllegalAccessException,
+			ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, FileNotFoundException, IOException {
 		super();
 		// TODO Auto-generated constructor stub
 		Properties prop = new Properties();
-        String nomArch = "config/fabrica.properties";
-        prop.load(new FileInputStream(nomArch));
+		String nomArch = "config/fabrica.properties";
+		prop.load(new FileInputStream(nomArch));
 		String nomFab = prop.getProperty("nombreFabrica");
-		IFabricaAbstracta fabrica = (IFabricaAbstracta) Class.forName(nomFab).getDeclaredConstructor().newInstance();
-		Folios = fabrica.crearIDAOFolios();
+		fabrica = (IFabricaAbstracta) Class.forName(nomFab).getDeclaredConstructor().newInstance();
+		Folios = fabrica.crearIDAOFolios(fabrica);
 		pool = new PoolConexiones();
 	}
 
@@ -52,14 +53,14 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 		try {
 			con = pool.obtenerConexion(modifica);
 			if (!Folios.member(voF.getCodigo(), con)) {
-				Folio folio = new Folio(voF.getCodigo(), voF.getCaratula(), voF.getPaginas());
+				Folio folio = new Folio(voF.getCodigo(), voF.getCaratula(), voF.getPaginas(), fabrica);
 				Folios.insert(folio, con);
 				ok = true;
 			} else {
 				if (con != null) {
 					pool.liberarConexion(con, ok);
 				}
-				throw new LogicaException("Error");
+				throw new LogicaException("El folio ya existe en el sistema");
 			}
 			if (con != null) {
 				pool.liberarConexion(con, ok);
@@ -83,7 +84,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 				if (con != null) {
 					pool.liberarConexion(con, ok);
 				}
-				throw new LogicaException("Error");
+				throw new LogicaException("El folio ingresado no existe");
 			} else {
 				Folio fol = Folios.find(codF, con);
 				int numR = fol.cantidadRevisiones(con) + 1;
@@ -224,7 +225,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 				throw new LogicaException("No existe ningún folio");
 			} else {
 				maxFolio = Folios.folioMasRevisado(con);
-				if (maxFolio == null) {
+				if (maxFolio.getCantRevisiones() == 0) {
 					pool.liberarConexion(con, ok);
 					throw new LogicaException("No existe ningun folio con revisiones");
 				}

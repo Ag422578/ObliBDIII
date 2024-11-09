@@ -57,15 +57,19 @@ public class ControladorFolioMasRevisado {
 			while (VFMR.tableFolioMasRevisado.getRowCount() != 0)
 				dm.removeRow(VFMR.tableFolioMasRevisado.getRowCount() - 1);
 			VOFolioMaxRev FolioMaxRev = fac.folioMasRevisado();
-			dm.addRow(new Object[] { FolioMaxRev.getCodigo(), FolioMaxRev.getCaratula(), FolioMaxRev.getPaginas(),
-					FolioMaxRev.getCantRevisiones() });
+			if (FolioMaxRev == null) {
+				VFMR.mostrarResultado("No existen revisiones en el sistema");
+			} else {
+				dm.addRow(new Object[] { FolioMaxRev.getCodigo(), FolioMaxRev.getCaratula(), FolioMaxRev.getPaginas(),
+						FolioMaxRev.getCantRevisiones() });
+			}
 
 		} catch (RemoteException e) {
 			VFMR.mostrarResultado("Error de conexion con el servidor");
 		} catch (PersistenciaException e) {
-			VFMR.mostrarResultado("Error de persistencia");
+			VFMR.mostrarResultado(e.getMensaje());
 		} catch (LogicaException e) {
-			VFMR.mostrarResultado("Error al obtener el folio más revisado");
+			VFMR.mostrarResultado(e.getMensaje());
 		}
 	}
 }

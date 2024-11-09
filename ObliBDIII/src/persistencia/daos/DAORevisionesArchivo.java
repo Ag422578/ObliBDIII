@@ -17,28 +17,25 @@ public class DAORevisionesArchivo implements IDAORevisiones, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Revision> Revisiones;
+	private List<Revision> Revisiones = new ArrayList<Revision>();
 	private String codigoFolio;
 	LecturaArchivo l;
 	EscrituraArchivo e;
 
 	public DAORevisionesArchivo(String codF) throws PersistenciaException {
+		this.codigoFolio = codF;
 		try {
-			this.codigoFolio = codF;
-			Revisiones = new ArrayList<Revision>();
-			l = new LecturaArchivo("revisiones-" + codigoFolio + ".txt");
-			Revisiones = (List<Revision>) l.getInputObject().readObject();
+			LecturaArchivo l = new LecturaArchivo("revisiones-" + codigoFolio + ".txt");
+			Revisiones = (ArrayList<Revision>) l.getInputObject().readObject();
 			l.finalizarLectura();
+		} catch (NullPointerException e) {
 		} catch (ClassNotFoundException e) {
-			throw new PersistenciaException("Error de persistencia");
 		} catch (IOException e) {
-			throw new PersistenciaException("Error de persistencia");
 		}
 	}
 
 	public void insBack(Revision rev, IConexion con) throws PersistenciaException {
 		try {
-			System.out.println("HOLA");
 			Revisiones.add(rev);
 			e = new EscrituraArchivo("revisiones-" + codigoFolio + ".txt");
 			e.getOutputObject().writeObject(Revisiones);
@@ -52,14 +49,41 @@ public class DAORevisionesArchivo implements IDAORevisiones, Serializable {
 	}
 
 	public int largo(IConexion con) throws PersistenciaException {
-		return Revisiones.size();
+		int largo = 0;
+		try {
+			LecturaArchivo l = new LecturaArchivo("revisiones-" + codigoFolio + ".txt");
+			Revisiones = (ArrayList<Revision>) l.getInputObject().readObject();
+			l.finalizarLectura();
+			largo = Revisiones.size();
+		} catch (NullPointerException e) {
+		} catch (ClassNotFoundException e) {
+		} catch (IOException e) {
+		}
+		return largo;
 	}
 
 	public Revision kesimo(int numero, IConexion con) throws PersistenciaException {
+		try {
+			LecturaArchivo l = new LecturaArchivo("revisiones-" + codigoFolio + ".txt");
+			Revisiones = (ArrayList<Revision>) l.getInputObject().readObject();
+			l.finalizarLectura();
+		} catch (NullPointerException e) {
+		} catch (ClassNotFoundException e) {
+		} catch (IOException e) {
+		}
 		return Revisiones.get(numero);
 	}
 
 	public List<VORevision> listarRevisiones(IConexion con) throws PersistenciaException {
+		try {
+			LecturaArchivo l = new LecturaArchivo("revisiones-" + codigoFolio + ".txt");
+			Revisiones = (ArrayList<Revision>) l.getInputObject().readObject();
+			l.finalizarLectura();
+		} catch (NullPointerException e) {
+		} catch (ClassNotFoundException e) {
+		} catch (IOException e) {
+
+		}
 		List<VORevision> VORevisiones = new ArrayList<VORevision>();
 		for (int i = 0; i < Revisiones.size(); i++) {
 			Revision rev = Revisiones.get(i);
@@ -80,7 +104,8 @@ public class DAORevisionesArchivo implements IDAORevisiones, Serializable {
 			throw e;
 		} catch (IOException e1) {
 			throw new PersistenciaException("Error de persistencia");
-		}
+		} catch (NullPointerException e) {
 
+		}
 	}
 }

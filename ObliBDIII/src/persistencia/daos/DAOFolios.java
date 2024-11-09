@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import logica.Folio;
+import logica.IFabricaAbstracta;
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.*;
 import persistencia.Conexion;
@@ -15,8 +16,9 @@ import persistencia.IConexion;
 import persistencia.consultas.Consultas;
 
 public class DAOFolios implements IDAOFolios {
-
-	public DAOFolios() throws PersistenciaException {
+	private IFabricaAbstracta fabrica;
+	public DAOFolios(IFabricaAbstracta fab) throws PersistenciaException {
+		this.fabrica = fab;
 	}
 
 	public boolean member(String cod, IConexion con) throws PersistenciaException {
@@ -65,7 +67,7 @@ public class DAOFolios implements IDAOFolios {
 			pstmt.setString(1, cod);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				fol = new Folio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
+				fol = new Folio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"), fabrica);
 			}
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error de acceso a datos.");

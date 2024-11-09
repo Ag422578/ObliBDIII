@@ -18,10 +18,10 @@ public class main {
 			 
 			 DAOFoliosArchivo2 d = new DAOFoliosArchivo2();
 			 
-			 Folio f = new Folio("212-99", "algo", 8);
+			 // Folio f = new Folio("212-99", "algo", 8);
 			 
-			 d.insert(f, null);
-			 d.insert(new Folio("212-992", "algo", 8), null);
+			 // d.insert(f, null);
+			 // d.insert(new Folio("212-992", "algo", 8), null);
 
 			 
 			 System.out.print(d.member("212-99--", null));

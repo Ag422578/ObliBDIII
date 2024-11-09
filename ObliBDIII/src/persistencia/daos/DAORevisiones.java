@@ -22,6 +22,7 @@ public class DAORevisiones implements IDAORevisiones, Serializable {
 	private String codigoFolio;
 
 	public DAORevisiones(String codF) throws PersistenciaException {
+		System.out.println("HOLA2");
 		this.codigoFolio = codF;
 	}
 

@@ -14,8 +14,8 @@ public class FabricaMYSQL implements IFabricaAbstracta {
 		return dao;
 	}
 	
-	public IDAOFolios crearIDAOFolios () throws PersistenciaException{
-		IDAOFolios dao = new DAOFolios();
+	public IDAOFolios crearIDAOFolios (IFabricaAbstracta fab) throws PersistenciaException{
+		IDAOFolios dao = new DAOFolios(fab);
 		return dao;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import logica.Folio;
+import logica.IFabricaAbstracta;
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.VOFolio;
 import logica.valueObjects.VOFolioMaxRev;
@@ -31,11 +32,8 @@ public class DAOFoliosArchivo implements IDAOFolios, Serializable {
 			Folios = (TreeMap<String, Folio>) l.getInputObject().readObject();
 			l.finalizarLectura();
 		} catch (ClassNotFoundException e) {
-
 		} catch (IOException e) {
-
 		} catch (PersistenciaException e) {
-
 		}
 	}
 

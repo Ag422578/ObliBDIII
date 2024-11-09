@@ -1,19 +1,11 @@
 package logica;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Properties;
-
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.*;
 import persistencia.IConexion;
-import persistencia.daos.DAORevisiones;
 import persistencia.daos.IDAORevisiones;
-import logica.Fachada;
+import java.io.Serializable;
+import java.util.List;
 
 public class Folio implements Serializable {
 	/**
@@ -24,43 +16,11 @@ public class Folio implements Serializable {
 	private int paginas;
 	private IDAORevisiones secuencia;
 
-	public Folio(String codigo, String caratula, int paginas) throws PersistenciaException {
-		try {
+	public Folio(String codigo, String caratula, int paginas, IFabricaAbstracta fabrica) throws PersistenciaException {
 			this.codigo = codigo;
 			this.caratula = caratula;
 			this.paginas = paginas;
-			Properties prop = new Properties();
-			String nomArch = "config/fabrica.properties";
-			prop.load(new FileInputStream(nomArch));
-			String nomFab = prop.getProperty("nombreFabrica");
-			IFabricaAbstracta fabrica = (IFabricaAbstracta) Class.forName(nomFab).getDeclaredConstructor().newInstance();
 			secuencia = fabrica.crearIDAORevisiones(codigo);
-		} catch (FileNotFoundException e) {
-			throw new PersistenciaException("Error de persistencia");
-		} catch (IOException e) {
-			throw new PersistenciaException("Error de persistencia");
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public String getCodigo() {
