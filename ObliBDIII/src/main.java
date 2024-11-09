@@ -4,11 +4,40 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
+import logica.Folio;
+import logica.valueObjects.VOFolio;
+import persistencia.daos.DAOFoliosArchivo;
+import persistencia.daos.DAOFoliosArchivo2;
+
 
 public class main {
 
 	public static void main(String[] args) {
 		 try {
+			 
+			 
+			 DAOFoliosArchivo2 d = new DAOFoliosArchivo2();
+			 
+			 Folio f = new Folio("212-99", "algo", 8);
+			 
+			 d.insert(f, null);
+			 d.insert(new Folio("212-992", "algo", 8), null);
+
+			 
+			 System.out.print(d.member("212-99--", null));
+			 System.out.print(d.member("212-99", null));
+			
+			 System.out.print(d.find("212-99",null).getCaratula());
+			 //d.delete("212-99", null);
+			 System.out.print(d.member("212-99", null));
+			 
+			 for (VOFolio vo: d.listarFolios(null)) {
+				 System.out.println(vo.getCodigo() + " " + vo.getCaratula() );
+			 }
+
+			 
+			 
+			 /*
 	           Properties prop = new Properties();
 	           String nomArch = "config/conexion.properties";
 	           prop.load(new FileInputStream(nomArch));
@@ -20,7 +49,7 @@ public class main {
 
 	           Class.forName(driver);
 	           Connection con = DriverManager.getConnection(url , user, passw);
-
+*/
 	           /*String crearTablaFolios = "CREATE TABLE Estudio.Folios (codigo VARCHAR(60) not null primary key, caratula VARCHAR(60) not null, paginas INT not null);";
 
 	           String crearTablaRevisiones = "CREATE TABLE Estudio.Revisiones (numero INT not null, codFolio VARCHAR(60) not null, descripcion VARCHAR(60) not null, primary key (numero, codFolio), foreign key (codFolio) references Estudio.Folios (codigo));";
