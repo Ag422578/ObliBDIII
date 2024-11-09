@@ -41,25 +41,22 @@ public class PoolConexiones implements IPoolConexiones {
 
 	public synchronized IConexion obtenerConexion(boolean modifica) throws PersistenciaException {
 		IConexion con = null;
-		try
-		{
-			while(con == null)
-			{
+		try {
+			while (con == null) {
 				if (tope > 0) {
-					con = (IConexion) conexiones[tope-1];
+					con = conexiones[tope - 1];
 					tope--;
 				} else if (creadas < tamanio) {
 					Connection connection = DriverManager.getConnection(url, user, password);
 					con = new Conexion(connection);
 					creadas++;
-					} else 
-					{
-						wait();
-					}
-			}	
-			((Conexion)con).getConnection().setAutoCommit(false);
-			((Conexion)con).getConnection().setTransactionIsolation(nivelTransaccionalidad);
-		}catch(SQLException ex) {
+				} else {
+					wait();
+				}
+			}
+			((Conexion) con).getConnection().setAutoCommit(false);
+			((Conexion) con).getConnection().setTransactionIsolation(nivelTransaccionalidad);
+		} catch (SQLException ex) {
 			throw new PersistenciaException("Error al obtener conexión");
 		} catch (InterruptedException e) {
 			throw new PersistenciaException("Error al obtener conexión");
@@ -68,23 +65,19 @@ public class PoolConexiones implements IPoolConexiones {
 	}
 
 	public synchronized void liberarConexion(IConexion con, boolean ok) throws PersistenciaException {
-		try
-		{
-			if (nivelTransaccionalidad != 0) {
-				if (ok) {
-					((Conexion) con).getConnection().commit();
-				} else {
-					((Conexion) con).getConnection().rollback();
-				}
+		try {
+			if (ok) {
+				((Conexion) con).getConnection().commit();
+			} else {
+				((Conexion) con).getConnection().rollback();
 			}
 			conexiones[tope] = (Conexion) con;
 			tope++;
 			notify();
-		}catch(SQLException ex)
-		{
+		} catch (SQLException ex) {
 			ex.printStackTrace();
 			throw new PersistenciaException("Error al liberar conexión");
 		}
-		
+
 	}
 }

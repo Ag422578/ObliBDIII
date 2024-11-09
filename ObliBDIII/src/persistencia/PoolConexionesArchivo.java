@@ -11,7 +11,6 @@ public class PoolConexionesArchivo implements IPoolConexiones, Serializable {
 	private static final long serialVersionUID = 1L;
 	private static boolean escribiendo;
 	private static int cantLectores;
-	private ConexionArchivo arch;
 
 	public PoolConexionesArchivo() {
 		escribiendo = false;
@@ -19,11 +18,11 @@ public class PoolConexionesArchivo implements IPoolConexiones, Serializable {
 	}
 
 	public synchronized IConexion obtenerConexion(boolean modifica) throws PersistenciaException {
-		IConexion conexion = new ConexionArchivo();
+		IConexion con = new ConexionArchivo();
 		if (modifica) {
 			while (!escribiendo) {
 				if (cantLectores == 0) {
-					escribiendo = true;
+						escribiendo = true;
 				} else
 					try {
 						wait();
@@ -40,49 +39,20 @@ public class PoolConexionesArchivo implements IPoolConexiones, Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			cantLectores++;
+				cantLectores++;
 		}
-		return conexion;
+		return con;
 	}
 
-	public synchronized void liberarConexion(IConexion con, boolean ok) throws PersistenciaException {
-	}
-
-	public synchronized void comienzoLectura() {
-		while (escribiendo)
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		cantLectores++;
-	}
-
-	public synchronized void terminoLectura() {
-		cantLectores--;
-		if (cantLectores == 0)
+	public synchronized void liberarConexion(IConexion con, boolean modifica) throws PersistenciaException {
+		if (modifica) {
+			escribiendo = false;
 			notify();
-	}
-
-	public synchronized void comienzoEscritura() {
-		while (!escribiendo) {
-			if (cantLectores == 0) {
-				escribiendo = true;
-			} else
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		} else {
+			cantLectores--;
+			if (cantLectores == 0)
+				notify();
 		}
-	}
-
-	public synchronized void terminoEscritura() {
-		escribiendo = false;
-		notify();
 	}
 
 }

@@ -1,9 +1,15 @@
 
 package logica;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Properties;
 
 import logica.excepciones.LogicaException;
 import logica.excepciones.PersistenciaException;
@@ -13,24 +19,31 @@ import logica.valueObjects.VORevision;
 import persistencia.IConexion;
 import persistencia.IPoolConexiones;
 import persistencia.PoolConexiones;
-import persistencia.daos.DAOFolios;
+import persistencia.daos.IDAOFolios;
+import persistencia.daos.IDAORevisiones;
 
 /*import Ejercicio3.LogicaPersistencia.Excepciones.PersistenciaException;
 import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
 
-public class Fachada extends UnicastRemoteObject implements IFachada {
+public class Fachada extends UnicastRemoteObject implements IFachada, Serializable {
 
-	private DAOFolios Folios;
+	private IDAOFolios Folios;
+	private IDAORevisiones Revisiones;
 
 	private static final long serialVersionUID = 1L;
 
 	private IPoolConexiones pool;
 
-	public Fachada() throws RemoteException, PersistenciaException {
+	public Fachada() throws PersistenciaException, InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, FileNotFoundException, IOException {
 		super();
 		// TODO Auto-generated constructor stub
+		Properties prop = new Properties();
+        String nomArch = "config/fabrica.properties";
+        prop.load(new FileInputStream(nomArch));
+		String nomFab = prop.getProperty("nombreFabrica");
+		IFabricaAbstracta fabrica = (IFabricaAbstracta) Class.forName(nomFab).getDeclaredConstructor().newInstance();
+		Folios = fabrica.crearIDAOFolios();
 		pool = new PoolConexiones();
-		Folios = new DAOFolios();
 	}
 
 	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException {

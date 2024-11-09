@@ -1,5 +1,6 @@
 package persistencia.daos;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,11 @@ import persistencia.Conexion;
 import persistencia.IConexion;
 import persistencia.consultas.Consultas;
 
-public class DAORevisiones implements IDAORevisiones {
+public class DAORevisiones implements IDAORevisiones, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codigoFolio;
 
 	public DAORevisiones(String codF) throws PersistenciaException {
