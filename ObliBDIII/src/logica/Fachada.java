@@ -3,8 +3,6 @@ package logica;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 
 import logica.excepciones.LogicaException;
@@ -16,7 +14,6 @@ import persistencia.IConexion;
 import persistencia.IPoolConexiones;
 import persistencia.PoolConexiones;
 import persistencia.daos.DAOFolios;
-import persistencia.daos.DAORevisiones;
 
 /*import Ejercicio3.LogicaPersistencia.Excepciones.PersistenciaException;
 import Ejercicio3.LogicaPersistencia.ValueObjects.*;*/
@@ -32,7 +29,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	public Fachada() throws RemoteException, PersistenciaException {
 		super();
 		// TODO Auto-generated constructor stub
-		pool = new PoolConexiones(); // No estoy muy seguro si va esto
+		pool = new PoolConexiones();
 		Folios = new DAOFolios();
 	}
 

@@ -70,6 +70,10 @@ public class VentanaListadoFolios {
 				"C\u00F3digo de folio", "Car\u00E1tula", "P\u00E1ginas"
 			}
 		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			Class[] columnTypes = new Class[] {
 				String.class, String.class, String.class
 			};

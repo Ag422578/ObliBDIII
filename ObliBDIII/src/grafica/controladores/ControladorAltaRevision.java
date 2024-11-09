@@ -13,7 +13,6 @@ import grafica.ventanas.VentanaAltaRevision;
 import logica.IFachada;
 import logica.excepciones.LogicaException;
 import logica.excepciones.PersistenciaException;
-import logica.valueObjects.VOFolio;
 
 public class ControladorAltaRevision {
 	private IFachada fac;

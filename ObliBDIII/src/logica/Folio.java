@@ -2,18 +2,16 @@ package logica;
 
 import java.util.List;
 
-import java.sql.Connection;
-
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.*;
-import persistencia.Conexion;
 import persistencia.IConexion;
 import persistencia.daos.DAORevisiones;
+import persistencia.daos.IDAORevisiones;
 
 public class Folio {
 	private String codigo, caratula;
 	private int paginas;
-	private DAORevisiones secuencia;
+	private IDAORevisiones secuencia;
 
 	public Folio(String codigo, String caratula, int paginas) throws PersistenciaException {
 		this.codigo = codigo;

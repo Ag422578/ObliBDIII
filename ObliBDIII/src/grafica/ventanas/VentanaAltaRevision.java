@@ -1,18 +1,12 @@
 package grafica.ventanas;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
 import java.awt.SystemColor;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import grafica.controladores.ControladorAltaRevision;
 
@@ -20,8 +14,6 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JCheckBox;
 
 public class VentanaAltaRevision {
 	private JFrame frmAltaDeRevision;
