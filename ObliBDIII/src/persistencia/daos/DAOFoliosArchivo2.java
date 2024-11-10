@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logica.Folio;
+import logica.Revision;
 import logica.excepciones.PersistenciaException;
 import logica.valueObjects.VOFolio;
 import logica.valueObjects.VOFolioMaxRev;
@@ -30,7 +31,7 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 
 	public boolean member(String cod, IConexion con) {
 		
-	    File currentDir = new File(System.getProperty("user.dir"));
+	    File currentDir = new File(System.getProperty("user.dir")+"/archivos");
 	    
 	    File[] files = currentDir.listFiles();
 	    
@@ -49,15 +50,24 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 	@Override
 	public void insert(Folio fol, IConexion ICon) throws PersistenciaException {
 		
-		VOFolio vo = new VOFolio(fol.getCodigo(), fol.getCaratula(), fol.getPaginas());
-	    
-	    String fileName = "folio-" + vo.getCodigo() + ".txt";
+	    File currentDir = new File(System.getProperty("user.dir")+"/archivos");
+
+	    String fileName = currentDir + "/folio-" + fol.getCodigo() + ".txt";
 	    
 	  
 	    try (FileOutputStream fileOut = new FileOutputStream(fileName);
 	         ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
 	        
-	        out.writeObject(vo); 
+	        out.writeObject(fol); 
+	        
+		    try (FileOutputStream fileOut2 = new FileOutputStream(currentDir+"/revisiones-" + fol.getCodigo() + ".txt");
+			         ObjectOutputStream out2 = new ObjectOutputStream(fileOut2)) {
+			        
+			        out2.writeObject(new ArrayList<Revision>()); 
+			        
+			    } catch (IOException e) {
+			        e.printStackTrace();
+			    }
 	        
 	    } catch (IOException e) {
 	        e.printStackTrace();
@@ -67,25 +77,21 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 
 	@Override
 	public Folio find(String cod, IConexion con) throws PersistenciaException {
-	    File currentDir = new File(System.getProperty("user.dir"));
+		
+	    File currentDir = new File(System.getProperty("user.dir")+"/archivos");
+
 	    
-	    File[] files = currentDir.listFiles();
-    
-	    if (files != null) {
-	        for (File file : files) {
-	            if (file.isFile() && file.getName().contains(cod)) {
-	                try (FileInputStream fileIn = new FileInputStream(file);
+
+	     try (FileInputStream fileIn = new FileInputStream(currentDir+"/folio-" + cod + ".txt");
 	                     ObjectInputStream in = new ObjectInputStream(fileIn)) {
 	                    
-	                	VOFolio vo =  (VOFolio) in.readObject();
-	    				// return  new Folio(vo.getCodigo(), vo.getCaratula(), vo.getPaginas());
+	    	 return   (Folio) in.readObject();
 	                    
 	                } catch (IOException | ClassNotFoundException e) {
 	                    e.printStackTrace();
 	                }
-	            }
-	        }
-	    }
+
+	    
 	    
 	    return null; 
 	}
@@ -94,7 +100,9 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 	@Override
 	public void delete(String cod, IConexion con) throws PersistenciaException {
 		
-		File file = new File(System.getProperty("user.dir") + "/folio-" + cod + ".txt");
+		
+		
+		File file = new File(System.getProperty("user.dir") +"/archivos"+"/folio-" + cod + ".txt");
 	    
 	    if (file.exists() && file.isFile()) {
 	        file.delete();
@@ -108,7 +116,10 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 	public List<VOFolio> listarFolios(IConexion con) throws PersistenciaException {
 		
 		List<VOFolio> lista = new ArrayList<VOFolio>();
-		File currentDir = new File(System.getProperty("user.dir"));
+		
+		String archivos = System.getProperty("user.dir")+"\\archivos";
+	    File currentDir = new File(archivos);
+	    
 	    
 	    File[] files = currentDir.listFiles();
     
@@ -118,8 +129,11 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 	                try (FileInputStream fileIn = new FileInputStream(file);
 	                     ObjectInputStream in = new ObjectInputStream(fileIn)) {
 	                    
-	                	VOFolio vo =  (VOFolio) in.readObject();
-	                	lista.add(vo);
+	                	Folio fol =  (Folio) in.readObject();
+	                	
+	                	
+	                	
+	                	lista.add(new VOFolio(fol.getCodigo(), fol.getCaratula(), fol.getPaginas()));
 	                	
 	                	
 	                } catch (IOException | ClassNotFoundException e) {
@@ -149,13 +163,13 @@ public class DAOFoliosArchivo2 implements IDAOFolios {
 		 VOFolio voFolioMax= null;
 		 for (VOFolio f: folios) {
 		
-				File file = new File(System.getProperty("user.dir") + "/revisiones-" + f.getCodigo() + ".txt");
+				File file = new File(System.getProperty("user.dir") +"/archivos"+ "/revisiones-" + f.getCodigo() + ".txt");
 
 			 
 			 try (FileInputStream fileIn = new FileInputStream(file);
                      ObjectInputStream in = new ObjectInputStream(fileIn)) {
                     
-				 List<VORevision> revisiones =  (List<VORevision>) in.readObject();
+				 ArrayList<Revision> revisiones =  (ArrayList<Revision>) in.readObject();
     				
 				 if (revisiones.size() > maximo) {
 					 maximo = revisiones.size();

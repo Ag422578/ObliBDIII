@@ -5,9 +5,13 @@ import java.sql.DriverManager;
 import java.util.Properties;
 
 import logica.Folio;
+import logica.Revision;
 import logica.valueObjects.VOFolio;
+import persistencia.FabricaArchivo2;
 import persistencia.daos.DAOFoliosArchivo;
 import persistencia.daos.DAOFoliosArchivo2;
+import persistencia.daos.DAORevisiones;
+import persistencia.daos.DAORevisionesArchivo2;
 
 
 public class main {
@@ -18,22 +22,29 @@ public class main {
 			 
 			 DAOFoliosArchivo2 d = new DAOFoliosArchivo2();
 			 
-			 // Folio f = new Folio("212-99", "algo", 8);
+			  Folio f = new Folio("212-99", "algo", 8, new FabricaArchivo2());
 			 
-			 // d.insert(f, null);
+			  d.insert(f, null);
 			 // d.insert(new Folio("212-992", "algo", 8), null);
 
 			 
-			 System.out.print(d.member("212-99--", null));
-			 System.out.print(d.member("212-99", null));
+			 // f.addRevision(new Revision(1, "desdf"), null);
+			  
+			  
+				 DAORevisionesArchivo2 dr = new DAORevisionesArchivo2("1");
+				 
+				 System.out.print(dr.kesimo(0, null).getDescripcion());
+
+			// System.out.print(d.member("212-99--", null));
+			// System.out.print(d.member("212-99", null));
 			
-			 System.out.print(d.find("212-99",null).getCaratula());
+			// System.out.print(d.find("212-99",null).getCaratula());
 			 //d.delete("212-99", null);
-			 System.out.print(d.member("212-99", null));
+			// System.out.print(d.member("212-99", null));
 			 
-			 for (VOFolio vo: d.listarFolios(null)) {
-				 System.out.println(vo.getCodigo() + " " + vo.getCaratula() );
-			 }
+			// for (VOFolio vo: d.listarFolios(null)) {
+			//	 System.out.println(vo.getCodigo() + " " + vo.getCaratula() );
+			// }
 
 			 
 			 
