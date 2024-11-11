@@ -19,6 +19,7 @@ import logica.valueObjects.VORevision;
 import persistencia.IConexion;
 import persistencia.IPoolConexiones;
 import persistencia.PoolConexiones;
+import persistencia.PoolConexionesArchivo;
 import persistencia.daos.IDAOFolios;
 import persistencia.daos.IDAORevisiones;
 
@@ -38,13 +39,20 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 			SecurityException, FileNotFoundException, IOException {
 		super();
 		// TODO Auto-generated constructor stub
+		
 		Properties prop = new Properties();
+		
 		String nomArch = "config/fabrica.properties";
 		prop.load(new FileInputStream(nomArch));
 		String nomFab = prop.getProperty("nombreFabrica");
 		fabrica = (IFabricaAbstracta) Class.forName(nomFab).getDeclaredConstructor().newInstance();
 		Folios = fabrica.crearIDAOFolios(fabrica);
-		pool = new PoolConexiones();
+	
+		nomArch = "config/pool.properties";
+		prop.load(new FileInputStream(nomArch));
+		String nomPool = prop.getProperty("nombrePool");
+		pool = (IPoolConexiones) Class.forName(nomPool).getDeclaredConstructor().newInstance();
+
 	}
 
 	public void agregarFolio(VOFolio voF) throws PersistenciaException, RemoteException, LogicaException {
