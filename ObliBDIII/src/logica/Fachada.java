@@ -141,7 +141,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 
 	public String darDescripcion(String codF, int numR) throws PersistenciaException, RemoteException, LogicaException {
 		IConexion con = null;
-		boolean ok = false, modifica = true;
+		boolean ok = false, modifica = false;
 		String descripcion = null;
 		try {
 			con = pool.obtenerConexion(modifica);
@@ -176,7 +176,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 
 	public List<VOFolio> listarFolios() throws PersistenciaException, RemoteException {
 		IConexion con = null;
-		boolean ok = false, modifica = true;
+		boolean ok = false, modifica = false;
 		List<VOFolio> ListadoFolios = null;
 		try {
 			con = pool.obtenerConexion(modifica);
@@ -197,7 +197,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 			throws PersistenciaException, RemoteException, LogicaException {
 		List<VORevision> ListadoRevisiones = null;
 		IConexion con = null;
-		boolean ok = false, modifica = true;
+		boolean ok = false, modifica = false;
 		try {
 			con = pool.obtenerConexion(modifica);
 			if (Folios.member(codF, con)) {
@@ -223,7 +223,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada, Serializab
 
 	public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException, LogicaException {
 		IConexion con = null;
-		boolean ok = false, modifica = true;
+		boolean ok = false, modifica = false;
 		VOFolioMaxRev maxFolio = null;
 		try {
 			con = pool.obtenerConexion(modifica);
